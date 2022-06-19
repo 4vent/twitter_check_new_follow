@@ -35,5 +35,4 @@ async function main() {
     }
 }
 
-main()
 cron.schedule('*/5 * * * *', () => main())
