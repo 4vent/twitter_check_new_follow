@@ -12,7 +12,7 @@ const ACCESS_KEY = process.env.TWITTER_ABECKENT_ACCESS_TOKEN
 const ACCESS_SECRET = process.env.TWITTER_ABECKENT_ACCESS_TOKEN_SECRET
 
 const userid = 'discarded_past'
-const url = 'https://discord.com/api/webhooks/988132197288534026/5pUbeO2atp1qaUHF2jDsWCqdRIvxl2OXV_aZHxvdqDrw_KZP0xT_Cv1VLjGH7sY0Uj4q';
+const url = process.env.DISCORD_WEBHOOK_URL;
 
 const client = new TwitterApi({
     appKey: APP_KEY,
@@ -26,9 +26,12 @@ async function main() {
     const num = parseInt(readFileSync('count.txt'))
     const friends_count = search_result.users[0].friends_count
     if (friends_count > num) {
+        console.log('find new follow!')
         const data = {content: userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
         axios.post(url, data)
         writeFileSync('count.txt', String(num+1))
+    } else {
+        console.log('found nothing new follow')
     }
 }
 
