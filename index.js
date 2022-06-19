@@ -29,7 +29,7 @@ async function main() {
         console.log('find new follow!')
         const data = {content: userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
         axios.post(url, data)
-        writeFileSync('count.txt', String(num+1))
+        writeFileSync('count.txt', String(friends_count))
     } else {
         console.log('found nothing new follow')
     }
