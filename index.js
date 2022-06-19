@@ -2,8 +2,9 @@
 
 require('dotenv').config();
 const { default: axios } = require('axios');
-const { mainModule } = require("process");
+const { writeFileSync, readFileSync } = require('fs');
 const { TwitterApi } = require("twitter-api-v2");
+const cron = require("node-cron")
 
 const APP_KEY = process.env.TWITTER_API_KEY
 const APP_SECRET = process.env.TWITTER_API_KEY_SECRET
@@ -11,8 +12,7 @@ const ACCESS_KEY = process.env.TWITTER_ABECKENT_ACCESS_TOKEN
 const ACCESS_SECRET = process.env.TWITTER_ABECKENT_ACCESS_TOKEN_SECRET
 
 const userid = 'discarded_past'
-const url = 'https://discord.com/api/webhooks/988064655136149545/fz7dnRpaRx3my2X0mhx9xGi_Pk3bF23vMymIsxjZLGJmoTr-q2JbxdMdTNkvgC2y1Ka3';
-const data = {content: userid + ' に新しい登録者です。'}
+const url = 'https://discord.com/api/webhooks/988132197288534026/5pUbeO2atp1qaUHF2jDsWCqdRIvxl2OXV_aZHxvdqDrw_KZP0xT_Cv1VLjGH7sY0Uj4q';
 
 const client = new TwitterApi({
     appKey: APP_KEY,
@@ -23,10 +23,13 @@ const client = new TwitterApi({
 
 async function main() {
     const search_result = await client.v1.searchUsers('@' + userid);
-    if (search_result.users[0].friends_count > 1) {
-        
+    const num = parseInt(readFileSync('count.txt'))
+    const friends_count = search_result.users[0].friends_count
+    if (friends_count > num) {
+        const data = {content: userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
         axios.post(url, data)
+        writeFileSync('count.txt', String(num+1))
     }
 }
 
-main()
+cron.schedule('*/5 * * * *', () => main())
