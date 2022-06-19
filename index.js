@@ -35,6 +35,6 @@ async function main() {
     }
 }
 
-axios.post(url, {content: 'アプリ起動'})
-cron.schedule('* * * * *', () => axios.post(url, {content: '生存確認'}))
+console.log('アプリ起動')
+cron.schedule('* * * * *', () => console.log('生存確認'))
 cron.schedule('*/5 * * * *', () => main())
