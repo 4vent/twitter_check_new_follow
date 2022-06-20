@@ -11,7 +11,7 @@ const APP_SECRET = process.env.TWITTER_API_KEY_SECRET
 const ACCESS_KEY = process.env.TWITTER_ABECKENT_ACCESS_TOKEN
 const ACCESS_SECRET = process.env.TWITTER_ABECKENT_ACCESS_TOKEN_SECRET
 
-const userid = 'discarded_past'
+const userid = 'resolute_faith'
 const url = process.env.DISCORD_WEBHOOK_URL;
 
 const client = new TwitterApi({
@@ -26,8 +26,14 @@ async function main() {
     const num = parseInt(readFileSync('count.txt'))
     const friends_count = search_result.users[0].friends_count
     if (friends_count > num) {
-        console.log('find new follow!')
-        const data = {content: userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
+        var data = ''
+        if (num < 0) {
+            console.log('first check!')
+            data = {content: '(初回)' + userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
+        } else {
+            console.log('find new follow!')
+            data = {content: '新着フォロー！ ' + userid + ' の現在のフォロー数は ' + String(friends_count) + ' です。'}
+        }
         axios.post(url, data)
         writeFileSync('count.txt', String(friends_count))
     } else {
